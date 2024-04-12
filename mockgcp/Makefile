@@ -57,4 +57,4 @@ generate-protos-from-openapi:
 
 	wget -O storage-v1.json https://raw.githubusercontent.com/googleapis/google-api-go-client/main/storage/v1/storage-api.json
 	mkdir -p apis/mockgcp/cloud/storage/v1/
-	cd tools/gapic; go run . --proto-version=2 ../../storage-v1.json > ../../apis/mockgcp/storage/v1/service.proto
+	cd tools/gapic; go run . --proto-version=2 ../../storage-v1.json > ../../apis/mockgcp/cloud/storage/v1/service.proto
