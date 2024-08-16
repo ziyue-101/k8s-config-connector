@@ -1102,6 +1102,7 @@ spec:
   projectRef:
     name: gkehubfeaturemembership-dep-acm
   location: global
+  membershipLocation: us-central1-a
   membershipRef:
     name: gkehubfeaturemembership-dep-acm
   featureRef:
@@ -1110,24 +1111,10 @@ spec:
     configSync:
       sourceFormat: unstructured
       git:
-        syncRepo: "https://github.com/GoogleCloudPlatform/cloud-foundation-toolkit"
-        syncBranch: "master"
-        policyDir: "config-connector"
-        syncWaitSecs: "20"
-        syncRev: "HEAD"
+        syncRepo: "https://github.com/GoogleCloudPlatform/anthos-config-management-samples"
+        syncBranch: "main"
+        policyDir: "config-sync-quickstart/multirepo/root"
         secretType: "none"
-    policyController:
-      enabled: true
-      exemptableNamespaces:
-        - "test-namespace"
-      referentialRulesEnabled: true
-      logDeniesEnabled: true
-      templateLibraryInstalled: true
-      auditIntervalSeconds: "20"
-    hierarchyController:
-      enabled: true
-      enablePodTreeLabels: true
-      enableHierarchicalResourceQuota: true
 ---
 apiVersion: container.cnrm.cloud.google.com/v1beta1
 kind: ContainerCluster
@@ -1146,6 +1133,10 @@ apiVersion: gkehub.cnrm.cloud.google.com/v1beta1
 kind: GKEHubFeature
 metadata:
   name: gkehubfeaturemembership-dep-acm
+  # The GKEHubFeature is a global resource in your project.
+  # In case you might have configured the resource using other clients like gcloud, abandon the resource when deleted.
+  annotations:
+    cnrm.cloud.google.com/deletion-policy: abandon
 spec:
   projectRef:
     name: gkehubfeaturemembership-dep-acm
@@ -1161,7 +1152,7 @@ metadata:
     cnrm.cloud.google.com/project-id: gkehubfeaturemembership-dep-acm
   name: gkehubfeaturemembership-dep-acm
 spec:
-  location: global
+  location: us-central1-a
   authority:
     # Issuer must contain a link to a valid JWT issuer. Your ContainerCluster is one.
     issuer: https://container.googleapis.com/v1/projects/gkehubfeaturemembership-dep-acm/locations/us-central1-a/clusters/gkehubfeaturemembership-dep-acm
@@ -1189,7 +1180,7 @@ kind: Service
 metadata:
   annotations:
     cnrm.cloud.google.com/project-id: gkehubfeaturemembership-dep-acm
-    cnrm.cloud.google.com/disable-dependent-services: "false"
+    cnrm.cloud.google.com/deletion-policy: "abandon"
   name: gkehubfeaturemembership-dep1-acm1
 spec:
   resourceID: container.googleapis.com
@@ -1199,7 +1190,7 @@ kind: Service
 metadata:
   annotations:
     cnrm.cloud.google.com/project-id: gkehubfeaturemembership-dep-acm
-    cnrm.cloud.google.com/disable-dependent-services: "false"
+    cnrm.cloud.google.com/deletion-policy: "abandon"
   name: gkehubfeaturemembership-dep2-acm
 spec:
   resourceID: gkehub.googleapis.com
@@ -1209,7 +1200,7 @@ kind: Service
 metadata:
   annotations:
     cnrm.cloud.google.com/project-id: gkehubfeaturemembership-dep-acm
-    cnrm.cloud.google.com/disable-dependent-services: "false"
+    cnrm.cloud.google.com/deletion-policy: "abandon"
   name: gkehubfeaturemembership-dep3-acm
 spec:
   resourceID: anthosconfigmanagement.googleapis.com
